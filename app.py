@@ -87,6 +87,14 @@ def index():
 
     return render_template("index.html")
 
+@app.route("/debug/<video_id>")
+def debug_transcript(video_id):
+    try:
+        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['en'])
+        return {"status": "success", "length": len(transcript_list), "sample": transcript_list[:5]}
+    except Exception as e:
+        return {"status": "error", "error": str(e), "type": type(e).__name__}
+        
 if __name__ == "__main__":
     # Set your OpenAI API key from an environment variable or directly here
     openai.api_key = os.getenv("OPENAI_API_KEY") or "YOUR-API-KEY"
